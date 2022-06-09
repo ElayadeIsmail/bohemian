@@ -14,11 +14,112 @@ model Category {
   id        Int        @id @default(autoincrement())
   name      String     @unique @db.Char(50)
   parentId  Int?       @map("parent_id")
-  parent    Category?  @relation("CategoryParent", fields: [parentId], references: [id])
-  childrens Category[] @relation("CategoryParent")
+  parent    Category?  @relation("category_parent", fields: [parentId], references: [id])
+  childrens Category[] @relation("category_parent")
+  products  Product[]
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
 
   @@index([parentId])
   @@map("categories")
+}
+
+model Product {
+  id          Int               @id @default(autoincrement())
+  title       String            @unique @db.Char(100)
+  slug        String            @unique
+  details     Json
+  categoryId  Int               @map("category_id")
+  category    Category          @relation(fields: [categoryId], references: [id])
+  price       Float
+  promotionId Int?              @map("promotion_id")
+  promotion   Promotion?        @relation(fields: [promotionId], references: [id])
+  collections Collection[]
+  tags        Tag[]
+  variants    ProductVariants[]
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model ProductVariants {
+  id        Int                   @id @default(autoincrement())
+  texture   String
+  productId Int                   @map("product_id")
+  product   Product               @relation(fields: [productId], references: [id])
+  images    ProductImage[]
+  sizes     ProductVariantSizes[]
+  createdAt DateTime              @default(now()) @map("created_at")
+  updatedAt DateTime              @updatedAt @map("updated_at")
+
+  @@map("product_variants")
+}
+
+model ProductVariantSizes {
+  id        Int             @id @default(autoincrement())
+  sizeId    Int
+  size      Size            @relation(fields: [sizeId], references: [id])
+  variantId Int             @map("variant_id")
+  variant   ProductVariants @relation(fields: [variantId], references: [id])
+  quantity  Int
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+
+  @@map("product_variant_sizes")
+}
+
+model Size {
+  id        Int                   @id @default(autoincrement())
+  name      String                @unique
+  variants  ProductVariantSizes[]
+  createdAt DateTime              @default(now()) @map("created_at")
+  updatedAt DateTime              @updatedAt @map("updated_at")
+
+  @@map("sizes")
+}
+
+model ProductImage {
+  id        Int             @id @default(autoincrement())
+  url       String
+  position  Int
+  alt       String?         @default("")
+  variantId Int             @map("variant_id")
+  variant   ProductVariants @relation(fields: [variantId], references: [id])
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+
+  @@map("product_images")
+}
+
+model Collection {
+  id        Int       @id @default(autoincrement())
+  title     String    @unique
+  slug      String    @unique
+  cover     String
+  products  Product[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+}
+
+model Promotion {
+  id          Int       @id @default(autoincrement())
+  name        String
+  discount    Float
+  description String?   @default("")
+  products    Product[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("promotions")
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("tags")
 }

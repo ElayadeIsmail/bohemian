@@ -9,5 +9,5 @@ export class Category {
   @Field(() => Int, { nullable: true })
   parentId?: number;
   @Field(() => [Category], { nullable: true })
-  children: Category[];
+  children?: Category[];
 }
