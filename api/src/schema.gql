@@ -1,0 +1,45 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Category {
+  children: [Category!]
+  id: Int!
+  name: String!
+  parentId: Int
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input FindManyTagsInputs {
+  cursor: Int
+  limit: Int = 20
+  search: String = ""
+}
+
+type FindManyTagsResponse {
+  cursor: Int
+  hasMore: Boolean!
+  items: [Tag!]!
+}
+
+type Mutation {
+  addTag(name: String!): Tag!
+  deleteTag(id: Int!): Tag!
+  updateTag(id: Int!, name: String!): Tag!
+}
+
+type Query {
+  tag(id: Int!): Tag!
+  tags(args: FindManyTagsInputs!): FindManyTagsResponse!
+}
+
+type Tag {
+  createdAt: DateTime!
+  id: Int!
+  name: String!
+  updatedAt: DateTime!
+}
