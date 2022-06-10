@@ -9,10 +9,28 @@ type Category {
   parentId: Int
 }
 
+input CreatePromotionInputs {
+  description: String
+  discount: Float!
+  name: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input FindManyPromotionsInputs {
+  cursor: Int
+  limit: Int = 20
+  search: String = ""
+}
+
+type FindManyPromotionsResponse {
+  cursor: Int
+  hasMore: Boolean!
+  items: [Promotion!]!
+}
 
 input FindManyTagsInputs {
   cursor: Int
@@ -27,12 +45,24 @@ type FindManyTagsResponse {
 }
 
 type Mutation {
+  addPromotion(inputs: CreatePromotionInputs!): Promotion!
   addTag(name: String!): Tag!
-  deleteTag(id: Int!): Tag!
-  updateTag(id: Int!, name: String!): Tag!
+  deleteTag(id: Int!): Promotion!
+  updateTag(id: Int!, inputs: UpdatePromotionInputs!): Promotion!
+}
+
+type Promotion {
+  createdAt: DateTime!
+  description: String
+  discount: Float!
+  id: Int!
+  name: String!
+  updatedAt: DateTime!
 }
 
 type Query {
+  promotion(id: Int!): Promotion!
+  promotions(args: FindManyPromotionsInputs!): FindManyPromotionsResponse!
   tag(id: Int!): Tag!
   tags(args: FindManyTagsInputs!): FindManyTagsResponse!
 }
@@ -42,4 +72,10 @@ type Tag {
   id: Int!
   name: String!
   updatedAt: DateTime!
+}
+
+input UpdatePromotionInputs {
+  description: String = ""
+  discount: Float!
+  name: String!
 }

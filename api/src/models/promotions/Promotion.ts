@@ -1,5 +1,6 @@
-import { Field, Int } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class Promotion {
   @Field(() => Int)
   id: number;

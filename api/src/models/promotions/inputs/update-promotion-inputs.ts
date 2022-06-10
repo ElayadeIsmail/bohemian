@@ -1,10 +1,10 @@
 import { Field, Float, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class CreatePromotionInputs {
+export class UpdatePromotionInputs {
   @Field()
   name: string;
-  @Field({ nullable: true })
+  @Field({ nullable: true, defaultValue: '' })
   description: string;
   @Field(() => Float)
   discount: number;
