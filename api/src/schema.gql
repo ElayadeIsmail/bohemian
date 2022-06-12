@@ -9,6 +9,15 @@ type Category {
   parentId: Int
 }
 
+type Collection {
+  cover: String!
+  createdAt: DateTime!
+  id: Int!
+  slug: String!
+  title: String!
+  updatedAt: DateTime!
+}
+
 input CreatePromotionInputs {
   description: String
   discount: Float!
@@ -45,9 +54,12 @@ type FindManyTagsResponse {
 }
 
 type Mutation {
+  addCollection(title: String!): Collection!
   addPromotion(inputs: CreatePromotionInputs!): Promotion!
   addTag(name: String!): Tag!
+  deleteCollection(id: Float!): Collection!
   deleteTag(id: Int!): Promotion!
+  updateCollection(id: Float!, title: String!): Collection!
   updateTag(id: Int!, inputs: UpdatePromotionInputs!): Promotion!
 }
 
@@ -61,6 +73,8 @@ type Promotion {
 }
 
 type Query {
+  collection(slug: String!): Collection!
+  collections: [Collection!]!
   promotion(id: Int!): Promotion!
   promotions(args: FindManyPromotionsInputs!): FindManyPromotionsResponse!
   tag(id: Int!): Tag!
